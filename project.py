@@ -1,3 +1,4 @@
+# necessary imports
 from urllib.request import urlopen
 import json
 import collections
@@ -42,7 +43,7 @@ for original in range(0, len(sequence)):
             continue
         else:
             newsequence = sequence[:original] + aminoacids[mutated] + sequence[original+1:]
-            # for making sure not adding same mutations again
+            # for making sure not adding existing mutations again
             if newsequence not in allmutations.keys():
                 allmutations[newsequence]['name'] = 'GeneratedMutation' + str(count)
                 allmutations[newsequence]['description'] = ""
@@ -51,7 +52,26 @@ for original in range(0, len(sequence)):
                 allmutations[newsequence]['mutatedType'] = aminoacids[mutated]
                 count += 1
 
-#PolyPhen and SIFT matrix creations and adding prediction values to combined mutations dictionary
+# generating files for doing queries on their respective algorithms
+with open(os.path.join('prediction queries', 'tp53.fasta'), "w") as outfile:
+    outfile.write('>'+geneName+' '+organismName)
+    outfile.write('\n')
+    outfile.write(sequence)
+outfile.close()
+
+with open(os.path.join('prediction queries', 'siftquery.txt'), "w") as outfile:
+    for i in allmutations.keys():
+        outfile.write(allmutations[i]['originalType']+str(allmutations[i]['position'])+allmutations[i]['mutatedType'])
+        outfile.write('\n')
+outfile.close()
+
+with open(os.path.join('prediction queries', 'polyphenquery.txt'), "w") as outfile:
+    for i in allmutations.keys():
+        outfile.write('P04637'+' '+str(allmutations[i]['position'])+' '+allmutations[i]['originalType']+' '+allmutations[i]['mutatedType'])
+        outfile.write('\n')
+outfile.close()
+
+# PolyPhen and SIFT matrix creations and storing them in their own respective dictionaries
 siftpredictionmatrixtype = collections.defaultdict(dict)
 siftpredictionmatrixvalue = collections.defaultdict(dict)
 polyphen2predictionmatrixtype = collections.defaultdict(dict)
@@ -79,6 +99,7 @@ with open(os.path.join('inputs', 'polyphen predictions.txt')) as f:
             polyphen2predictionmatrixtype[predictionvalues[6]+predictionvalues[7]][predictionvalues[8]] = predictionvalues[9] + ' ' + predictionvalues[10]
             polyphen2predictionmatrixvalue[predictionvalues[6]+predictionvalues[7]][predictionvalues[8]] = float(predictionvalues[11])
 
+# adding prediction values for both algoritms into the dictionary
 for i in allmutations.keys():
     allmutations[i]['siftpredictionType'] = siftpredictionmatrixtype[str(allmutations[i]['position'])+allmutations[i]['originalType']][allmutations[i]['mutatedType']]
     allmutations[i]['siftpredictionValue'] = siftpredictionmatrixvalue[str(allmutations[i]['position'])+allmutations[i]['originalType']][allmutations[i]['mutatedType']]
