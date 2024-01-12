@@ -1,0 +1,74 @@
+---
+title: "R Notebook"
+knit: (function(inputFile, encoding) { 
+  rmarkdown::render('project.Rmd', output_dir = './outputs/') })
+  
+output:
+  html_document:
+    number_sections: yes
+    toc: yes
+---
+
+#Installing and loading dependencies
+
+```{r}
+library(dplyr)
+library(ggplot2)
+```
+
+#Reading the csv file
+
+```{r}
+sample_data <- read.csv("./outputs/dictionary.csv") 
+```
+
+#Converting the data to dataframe
+
+```{r}
+df <- as.data.frame(sample_data) 
+```
+
+#Summary of the dataframe
+
+```{r}
+summary(df)
+```
+
+```{r}
+a <- df %>% select(1,5,as.integer(4),6,as.double(8))
+summary(a)
+```
+
+```{r}
+factorizedmutatedType <- factor(a$mutatedType)
+
+factorizedpositions <- factor(a$position)
+
+plot(x=a$position, y=a$siftpredictionValue)
+```
+
+#Bireysel olarak net sonuç göstermiyor #Genel olarak değişim göstermeyen aminoasit çoğunlukta #Pozisyon 0-100 arasında değişim konusunda bir yoğunluk söz konusu #Pozisyon 100-300 arasında 0-100 ve 300-400 arasına göre değişim oranı daha az
+
+```{r}
+
+b <- df %>% select(as.integer(4),5,6)
+
+df$index <- 1:nrow(df)
+
+qplot(b$originalType)# original aminoacid distrubition
+
+qplot(df$index, b$mutatedType)# mutated type distrubution
+
+qplot(df$siftpredictionType,main = "Sift Result") # sift result distrubition
+
+qplot(df$polyphen2predictionType, main = "Polyphen 2 Result") # polyphen 2 result distrubution
+
+qplot(df$position,df$mutatedType)# mutated aminoacid locations => white spaces 
+
+```
+```{r}
+
+qplot(df$mutatedType, df$description)
+```
+
+
