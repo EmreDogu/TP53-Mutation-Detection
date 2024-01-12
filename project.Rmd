@@ -40,14 +40,14 @@ summary(a)
 ```
 
 ```{r}
-factorizedmutatedType <- factor(a$mutatedType)
+plot(x=a$position, y=a$siftpredictionValue, xlab = "position", ylab = "prediction value", main = "Position range with Sift Prediction values 0.05>tolerated, 0.05<damaging")
+abline(h=0.05, col="blue", lwd=2)
+# For sift, prediction values smaller than 0.05 are predicted as damaging
 
-factorizedpositions <- factor(a$position)
-
-plot(x=a$position, y=a$siftpredictionValue)
+plot(x=a$position, y=df$polyphen2predictionValue, xlab = "position", ylab = "prediction value", main = "Position range with Polyphen2 Prediction values between 0.00-0.15 benign, 0.15-1.00 possible damaging, 0.85-1.00 damaging")
+abline(h=0.15, col="red",lwd=2)# below is predicted as benign, possibly damaged start point
+abline(h=0.85, col="purple",lwd=2)# above is predicted as damaging
 ```
-
-#Bireysel olarak net sonuç göstermiyor #Genel olarak değişim göstermeyen aminoasit çoğunlukta #Pozisyon 0-100 arasında değişim konusunda bir yoğunluk söz konusu #Pozisyon 100-300 arasında 0-100 ve 300-400 arasına göre değişim oranı daha az
 
 ```{r}
 
@@ -55,20 +55,18 @@ b <- df %>% select(as.integer(4),5,6)
 
 df$index <- 1:nrow(df)
 
-qplot(b$originalType)# original aminoacid distrubition
+qplot(b$originalType,xlab = "Original Aminoacids",ylab = "Total Sequence", main = "Original Aminoacids Distrubutions")# original aminoacid distrubition
 
-qplot(df$index, b$mutatedType)# mutated type distrubution
+qplot(df$index, b$mutatedType,xlab = "Indexes",ylab = "Mutated Aminoacids", main = "Mutated Aminoacids Distrubutions")# mutated type distrubution
 
-qplot(df$siftpredictionType,main = "Sift Result") # sift result distrubition
+qplot(df$siftpredictionType,xlab = "Sift Prediction Types",main = "Sift Result") # sift result distrubition
 
-qplot(df$polyphen2predictionType, main = "Polyphen 2 Result") # polyphen 2 result distrubution
+qplot(df$polyphen2predictionType,xlab = "Polyphen2 Prediction Types", main = "Polyphen 2 Result") # polyphen 2 result distrubution
 
-qplot(df$position,df$mutatedType)# mutated aminoacid locations => white spaces 
+qplot(df$position,df$mutatedType,xlab = "Positions",ylab = "Mutated Aminoacids", main = "Mutated Aminoacid Locations")# mutated aminoacid locations => white spaces 
 
 ```
 ```{r}
 
-qplot(df$mutatedType, df$description)
+qplot(df$mutatedType, df$description,xlab = "Mutated Aminoacids",ylab = "Descriptions", main = "Descriptions in accordance with the mutated aminoacids")
 ```
-
-
