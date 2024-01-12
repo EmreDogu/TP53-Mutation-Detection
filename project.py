@@ -1,7 +1,7 @@
 from urllib.request import urlopen
 import json
 import collections
-import csv
+import os
 
 # store the URL in url as parameter for urlopen
 url = 'https://www.ebi.ac.uk/proteins/api/variation/P04637?format=json'
@@ -57,7 +57,7 @@ siftpredictionmatrixvalue = collections.defaultdict(dict)
 polyphen2predictionmatrixtype = collections.defaultdict(dict)
 polyphen2predictionmatrixvalue = collections.defaultdict(dict)
 
-with open('predictions\sift predictions.txt') as f:
+with open(os.path.join('inputs', 'sift predictions.txt')) as f:
     for line in f:
         predictionvalues = line.split()
         for aminoacid in range(0, len(aminoacids)):
@@ -65,11 +65,11 @@ with open('predictions\sift predictions.txt') as f:
                 predictionValType = 'tolerated'
             else:
                 predictionValType = 'damaging'
-            
+
             siftpredictionmatrixtype[predictionvalues[0]][aminoacids[aminoacid]] = predictionValType
             siftpredictionmatrixvalue[predictionvalues[0]][aminoacids[aminoacid]] = float(predictionvalues[aminoacid+2])
 
-with open('predictions\polyphen predictions.txt') as f:
+with open(os.path.join('inputs', 'polyphen predictions.txt')) as f:
    for line in f:
         predictionvalues = line.split()
         if (predictionvalues[9] == 'benign'):
@@ -78,7 +78,7 @@ with open('predictions\polyphen predictions.txt') as f:
         else:
             polyphen2predictionmatrixtype[predictionvalues[6]+predictionvalues[7]][predictionvalues[8]] = predictionvalues[9] + ' ' + predictionvalues[10]
             polyphen2predictionmatrixvalue[predictionvalues[6]+predictionvalues[7]][predictionvalues[8]] = float(predictionvalues[11])
-            
+
 for i in allmutations.keys():
     allmutations[i]['siftpredictionType'] = siftpredictionmatrixtype[str(allmutations[i]['position'])+allmutations[i]['originalType']][allmutations[i]['mutatedType']]
     allmutations[i]['siftpredictionValue'] = siftpredictionmatrixvalue[str(allmutations[i]['position'])+allmutations[i]['originalType']][allmutations[i]['mutatedType']]
@@ -86,11 +86,11 @@ for i in allmutations.keys():
     allmutations[i]['polyphen2predictionValue'] = polyphen2predictionmatrixvalue[str(allmutations[i]['position'])+allmutations[i]['originalType']][allmutations[i]['mutatedType']]
 
 # creating json file for r
-with open("dictionary.csv", "w") as outfile: 
+with open(os.path.join('outputs', 'dictionary.csv'), "w") as outfile:
     outfile.write("name,sequence,description,position,originalType,mutatedType,siftpredictionType,siftpredictionValue,polyphen2predictionType,polyphen2predictionValue")
 outfile.close()
 
-with open("dictionary.csv", "a") as outfile: 
+with open(os.path.join('outputs', 'dictionary.csv'), "a") as outfile:
     for i in allmutations.keys():
         outfile.write('\n')
         outfile.write(allmutations[i]['name']+','+i+','+allmutations[i]['description']+','+str(allmutations[i]['position'])+','+allmutations[i]['originalType']+','+allmutations[i]['mutatedType']+','+allmutations[i]['siftpredictionType']+','+str(allmutations[i]['siftpredictionValue'])+','+allmutations[i]['polyphen2predictionType']+','+str(allmutations[i]['polyphen2predictionValue']))
