@@ -116,16 +116,3 @@ with open(os.path.join('outputs', 'dictionary.csv'), "a") as outfile:
         outfile.write('\n')
         outfile.write(allmutations[i]['name']+','+i+','+allmutations[i]['description']+','+str(allmutations[i]['position'])+','+allmutations[i]['originalType']+','+allmutations[i]['mutatedType']+','+allmutations[i]['siftpredictionType']+','+str(allmutations[i]['siftpredictionValue'])+','+allmutations[i]['polyphen2predictionType']+','+str(allmutations[i]['polyphen2predictionValue']))
 outfile.close()
-
-# Polyphen2 results of every mutation in the list 
-for i in range(0, len(sequence)):
-    for aminoacid in aminoacids:
-        if(sequence[i]!=aminoacid):
-            print("Sift Prediction Result From "+str(i+1)+sequence[i]+" to "+aminoacid+" "+polyphen2predictionmatrixtype[str(i+1)+sequence[i]][aminoacid] + ' ' + str(polyphen2predictionmatrixvalue[str(i+1)+sequence[i]][aminoacid]))
-        else:
-            print(str(i+1)+sequence[i]+" == "+aminoacid+", Aminoacid location: "+str(i+1))
-
-# Sift results of every mutation in the list 
-for i in range(0, len(sequence)):
-    for aminoacid in aminoacids:
-        print("Sift Prediction Result From "+str(i+1)+sequence[i]+" to "+aminoacid+" "+siftpredictionmatrixtype[str(i+1)+sequence[i]][aminoacid] + ' ' + str(siftpredictionmatrixvalue[str(i+1)+sequence[i]][aminoacid]))
