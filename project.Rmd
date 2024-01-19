@@ -93,11 +93,11 @@ damagingsift <- filter(s2, siftpredictionValue<0.05)
 damagingpoly <- filter(p2, polyphen2predictionValue>0.85)
 
 
-#damagingsift
-#damagingpoly
+damagingsift
+damagingpoly
  
-#siftdf
-#polydf
+siftdf
+polydf
 ```
 #Data comparisons
 ```{r}
@@ -129,8 +129,8 @@ plot(damagingpoly$position,damagingpoly$polyphen2predictionValue, xlab = "positi
 definiteDamageSift <- filter(s2, siftpredictionValue < 0.01)
 definiteDamagePoly <- filter(p2, polyphen2predictionValue > 0.999)
 
-# definiteDamagePoly
-# definiteDamageSift
+definiteDamagePoly
+definiteDamageSift
 
 plot(definiteDamageSift$position,definiteDamageSift$siftpredictionValue, xlab = "position", ylab = "sift prediction values",ylim=c(1.00,0.00), main = "0.00 Sift Damaging")
 
@@ -144,22 +144,22 @@ plot(definiteDamagePoly$position,definiteDamagePoly$polyphen2predictionValue, xl
 definiteDamagingIntersection <- inner_join(definiteDamagePoly, definiteDamageSift)
 damagingIntersection <- inner_join(damagingpoly, damagingsift)
 ## only 1.00 and 0.00 -> definitely damaging intersections
-# definiteDamagingIntersection
+definiteDamagingIntersection
 ## all possible damaging intersections
-# damagingIntersection
+damagingIntersection
 ## polyphen2 damaging results
-# damagingpoly
+damagingpoly
 ## sift damaging results
-# damagingsift
+damagingsift
 
 renamedSift <- rename(damagingsift, PredictionType = siftpredictionType, PredictionValue = siftpredictionValue)
 renamedPoly <- rename(damagingpoly, PredictionType = polyphen2predictionType, PredictionValue = polyphen2predictionValue)
 ## renaming polyphen2 results so that it can be joined with sift results
-# renamedPoly
-# renamedSift
+renamedPoly
+renamedSift
 ## thus acquiring the all damaging mutations
 fullSickBinded <- rbind(renamedPoly, renamedSift)
-# fullSickBinded
+fullSickBinded
 ```
 ```{r}
 # Combined damaging results of sift and polyphen2 
@@ -191,8 +191,8 @@ ggplot(c, aes(x=factor(position), y=PredictionValue)) + geom_point() + theme(axi
 ```{r}
 
 splittedOriginalAminoacids <- split(a, f=a$originalType)
-# splittedOriginalAminoacids$A
-# splittedOriginalAminoacids$L
+splittedOriginalAminoacids$A
+splittedOriginalAminoacids$L
 
 ggplot(splittedOriginalAminoacids$A, aes(splittedOriginalAminoacids$A$position,splittedOriginalAminoacids$A$mutatedType))+geom_point() +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5))+ xlab("Positions")+ylab("MutatedAminoacid")+ggtitle("A to other aminoacids")
@@ -219,10 +219,10 @@ ggplot(splittedOriginalAminoacids$W, aes(splittedOriginalAminoacids$W$position,s
 ```{r}
 # Finding the specific mutation information 
 chosenAminoacidFromA <- splittedOriginalAminoacids$A[splittedOriginalAminoacids$A$position==119, ]
-# print(chosenAminoacidFromA)
+print(chosenAminoacidFromA)
 
 chosenAminoacidFromW <- splittedOriginalAminoacids$W[splittedOriginalAminoacids$W$position==146, ]
-# print(chosenAminoacidFromW)
+print(chosenAminoacidFromW)
 
 ```
 
@@ -231,14 +231,14 @@ chosenAminoacidFromW <- splittedOriginalAminoacids$W[splittedOriginalAminoacids$
 dfLimited <- head(df, 50)
 # By checking with "chosenAminoacidFromLocation", graph below and uniprot it can be seen that Second amino acid "E" has two mutations in the uniprot and also we have those mutations here as well as these mutations  sift and polyphen2 prediction results which are sift:G, K respectively 0.01, 0.02 and  polyphen2: G, K respectively 0.791, 0.538. Both says these mutations are damaging 
 chosenAminoacidFromLocation <-dfLimited[dfLimited$position==2,]
-# print(chosenAminoacidFromLocation)
+print(chosenAminoacidFromLocation)
 
 ggplot(dfLimited, aes(position,mutatedType))+geom_point()+theme(axis.text.x = element_text(angle = 90, vjust = 0.5))+ xlab("Positions")+ylab("MutatedAminoacid")+ggtitle("Mutations in accordance with the positions")
 
 # Lets check other mutations of Second amino acid "E"
 # 1851-1867
 chosenAminoacidFromLocation <-df[df$position==2,]
-# print(chosenAminoacidFromLocation)
+print(chosenAminoacidFromLocation)
 
 ggplot(chosenAminoacidFromLocation, aes(position,mutatedType))+geom_point()+theme(axis.text.x = element_text(angle = 90, vjust = 0.5))+ xlab("Positions")+ylab("MutatedAminoacid")+ggtitle("Second Amino acid E's mutations ")
 
@@ -251,44 +251,53 @@ ggplot(chosenAminoacidFromLocation, aes(mutatedType,polyphen2predictionType))+ge
 ```
 
 ```{r}
-# Conserved positions 2,4,5,8,9,11,12,15,21,22
-
 # Different amino acids from conserved regions 
 
 
-# LOCATION 4
+# LOCATION 10 V for human L for mouse I for monkey
 chosenAminoacidFromLocation <-df[df$position==4,]
-# print(chosenAminoacidFromLocation)
+print(chosenAminoacidFromLocation)
 
-ggplot(chosenAminoacidFromLocation, aes(position,mutatedType))+geom_point()+theme(axis.text.x = element_text(angle = 90, vjust = 0.5))+ xlab("Positions")+ylab("MutatedAminoacid")+ggtitle("Position 4 Conserved Amino acid mutations")
+ggplot(chosenAminoacidFromLocation, aes(position,mutatedType))+geom_point()+theme(axis.text.x = element_text(angle = 90, vjust = 0.5))+ xlab("Positions")+ylab("MutatedAminoacid")+ggtitle("Position 10 Conserved Amino acid mutations")
 
-ggplot(chosenAminoacidFromLocation, aes(mutatedType,siftpredictionType))+geom_point()+theme(axis.text.x = element_text(angle = 90, vjust = 0.5))+ xlab("Positions")+ylab("MutatedAminoacid")+ggtitle("Position 4 Conserved Amino acid Mutation Sift result ")
+ggplot(chosenAminoacidFromLocation, aes(mutatedType,siftpredictionType))+geom_point()+theme(axis.text.x = element_text(angle = 90, vjust = 0.5))+ xlab("MutatedType")+ylab("MutatedAminoacid")+ggtitle("Position 10 Conserved Amino acid Mutation Sift result ")
 
-ggplot(chosenAminoacidFromLocation, aes(mutatedType,polyphen2predictionType))+geom_point()+theme(axis.text.x = element_text(angle = 90, vjust = 0.5))+ xlab("Positions")+ylab("MutatedAminoacid")+ggtitle("Position 4 Conserved Amino acid Mutation Polyphen2 result ")
-
-
-# LOCATION 5
-chosenAminoacidFromLocation <-df[df$position==5,]
-# print(chosenAminoacidFromLocation)
-
-ggplot(chosenAminoacidFromLocation, aes(position,mutatedType))+geom_point()+theme(axis.text.x = element_text(angle = 90, vjust = 0.5))+ xlab("Positions")+ylab("MutatedAminoacid")+ggtitle("Position 5 Conserved Amino acid mutations")
-
-ggplot(chosenAminoacidFromLocation, aes(mutatedType,siftpredictionType))+geom_point()+theme(axis.text.x = element_text(angle = 90, vjust = 0.5))+ xlab("Positions")+ylab("MutatedAminoacid")+ggtitle("Position 5 Conserved Amino acid Mutation Sift result ")
-
-ggplot(chosenAminoacidFromLocation, aes(mutatedType,polyphen2predictionType))+geom_point()+theme(axis.text.x = element_text(angle = 90, vjust = 0.5))+ xlab("Positions")+ylab("MutatedAminoacid")+ggtitle("Position 5 Conserved Amino acid Mutation Polyphen2 result ")
+ggplot(chosenAminoacidFromLocation, aes(mutatedType,polyphen2predictionType))+geom_point()+theme(axis.text.x = element_text(angle = 90, vjust = 0.5))+ xlab("MutatedType")+ylab("MutatedAminoacid")+ggtitle("Position 10 Conserved Amino acid Mutation Polyphen2 result ")
 
 
+# LOCATION 165 Q for human K for mouse I for monkey
+#human-mouse, human-monkey by comparing these two, location 10 and 165 are not conserved thus the results are not heavily damaging 
+chosenAminoacidFromLocation <-df[df$position==165,]
+print(chosenAminoacidFromLocation)
+
+ggplot(chosenAminoacidFromLocation, aes(position,mutatedType))+geom_point()+theme(axis.text.x = element_text(angle = 90, vjust = 0.5))+ xlab("Positions")+ylab("MutatedAminoacid")+ggtitle("Position 165 Conserved Amino acid mutations")
+
+ggplot(chosenAminoacidFromLocation, aes(mutatedType,siftpredictionType))+geom_point()+theme(axis.text.x = element_text(angle = 90, vjust = 0.5))+ xlab("MutatedType")+ylab("MutatedAminoacid")+ggtitle("Position 165 Conserved Amino acid Mutation Sift result ")
+
+ggplot(chosenAminoacidFromLocation, aes(mutatedType,polyphen2predictionType))+geom_point()+theme(axis.text.x = element_text(angle = 90, vjust = 0.5))+ xlab("MutatedType")+ylab("MutatedAminoacid")+ggtitle("Position 165 Conserved Amino acid Mutation Polyphen2 result ")
+
+#Above examples are for not conserved nucleotide
+#Below examples are for the conserved areas
+
+chosenAminoacidFromLocation <-df[df$position==266,]
+print(chosenAminoacidFromLocation)
+
+ggplot(chosenAminoacidFromLocation, aes(position,mutatedType))+geom_point()+theme(axis.text.x = element_text(angle = 90, vjust = 0.5))+ xlab("Positions")+ylab("MutatedAminoacid")+ggtitle("Position 266 Conserved Amino acid mutations")
+
+ggplot(chosenAminoacidFromLocation, aes(mutatedType,siftpredictionType))+geom_point()+theme(axis.text.x = element_text(angle = 90, vjust = 0.5))+ xlab("MutatedType")+ylab("MutatedAminoacid")+ggtitle("Position 266 Conserved Amino acid Mutation Sift result ")
+
+ggplot(chosenAminoacidFromLocation, aes(mutatedType,polyphen2predictionType))+geom_point()+theme(axis.text.x = element_text(angle = 90, vjust = 0.5))+ xlab("MutatedType")+ylab("MutatedAminoacid")+ggtitle("Position 266 Conserved Amino acid Mutation Polyphen2 result ")
+
+chosenAminoacidFromLocation <-df[df$position==267,]
+print(chosenAminoacidFromLocation)
+
+ggplot(chosenAminoacidFromLocation, aes(position,mutatedType))+geom_point()+theme(axis.text.x = element_text(angle = 90, vjust = 0.5))+ xlab("Positions")+ylab("MutatedAminoacid")+ggtitle("Position 267 Conserved Amino acid mutations")
+
+ggplot(chosenAminoacidFromLocation, aes(mutatedType,siftpredictionType))+geom_point()+theme(axis.text.x = element_text(angle = 90, vjust = 0.5))+ xlab("MutatedType")+ylab("MutatedAminoacid")+ggtitle("Position 267 Conserved Amino acid Mutation Sift result ")
+
+ggplot(chosenAminoacidFromLocation, aes(mutatedType,polyphen2predictionType))+geom_point()+theme(axis.text.x = element_text(angle = 90, vjust = 0.5))+ xlab("MutatedType")+ylab("MutatedAminoacid")+ggtitle("Position 267 Conserved Amino acid Mutation Polyphen2 result ")
 
 
-# LOCATION 8
-chosenAminoacidFromLocation <-df[df$position==8,]
-# print(chosenAminoacidFromLocation)
-
-ggplot(chosenAminoacidFromLocation, aes(position,mutatedType))+geom_point()+theme(axis.text.x = element_text(angle = 90, vjust = 0.5))+ xlab("Positions")+ylab("MutatedAminoacid")+ggtitle("Position 8 Conserved Amino acid mutations")
-
-ggplot(chosenAminoacidFromLocation, aes(mutatedType,siftpredictionType))+geom_point()+theme(axis.text.x = element_text(angle = 90, vjust = 0.5))+ xlab("Positions")+ylab("MutatedAminoacid")+ggtitle("Position 8 Conserved Amino acid Mutation Sift result ")
-
-ggplot(chosenAminoacidFromLocation, aes(mutatedType,polyphen2predictionType))+geom_point()+theme(axis.text.x = element_text(angle = 90, vjust = 0.5))+ xlab("Positions")+ylab("MutatedAminoacid")+ggtitle("Position 8 Conserved Amino acid Mutation Polyphen2 result ")
 ```
 
 
